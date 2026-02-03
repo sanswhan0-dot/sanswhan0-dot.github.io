@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>เกมสุ่มอักษรไทย</title>
+
+<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
+<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+<style>
+body {
+    background:#111;
+    color:white;
+    text-align:center;
+    font-family:Arial;
+}
+button {
+    font-size:24px;
+    padding:10px 30px;
+    margin:10px;
+}
+#target {
+    font-size:72px;
+    color:yellow;
+}
+#result {
+    font-size:48px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>เกมสุ่มหาตัวอักษรไทย</h1>
+<div>ด่าน:</div>
+<div id="target">ก</div>
+<div id="result">กดปุ่มสุ่ม</div>
+<div id="count">0 / 10</div>
+
+<button id="btn" py-click="roll()">สุ่ม</button>
+
+<py-script>
+import random, time
+
+letters = [
+"ก","ข","ค","ง","จ","ฉ","ช","ซ","ฌ","ญ",
+"ฎ","ฏ","ฐ","ฑ","ฒ","ณ","ด","ต","ถ","ท",
+"ธ","น","บ","ป","ผ","ฝ","พ","ฟ","ภ","ม",
+"ย","ร","ล","ว","ศ","ษ","ส","ห","ฬ","อ","ฮ"
+]
+
+level = 0
+count = 0
+cooldown = False
+
+def roll():
+    global count, level, cooldown
+    if cooldown:
+        return
+
+    letter = random.choice(letters)
+    count += 1
+
+    Element("result").write(f"สุ่มได้: {letter}")
+    Element("count").write(f"{count} / 10")
+
+    if letter == letters[level]:
+        Element("result").write("🎉 ผ่านด่าน!")
+        level += 1
+        count = 0
+        Element("target").write(letters[level])
+        Element("count").write("0 / 10")
+        return
+
+    if count >= 10:
+        cooldown = True
+        for i in range(10,0,-1):
+            Element("result").write(f"รอ {i} วินาที...")
+            time.sleep(1)
+        count = 0
+        cooldown = False
+        Element("result").write("กดปุ่มสุ่ม")
+        Element("count").write("0 / 10")
+</py-script>
+
+</body>
+</html>
